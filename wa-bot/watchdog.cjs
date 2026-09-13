@@ -13,21 +13,69 @@ const BOT_DIR = __dirname;
 const LOG_FILE = path.join(BOT_DIR, 'bot-watchdog.log');
 const BOT_SCRIPT = path.join(BOT_DIR, 'bot.cjs');
 const AUTH_SESSION_DIR = path.join(BOT_DIR, '.wwebjs_auth', 'session');
+const PID_FILE = path.join(BOT_DIR, 'watchdog.pid');
+
+function checkSingleInstance() {
+  if (fs.existsSync(PID_FILE)) {
+    try {
+      const existingPid = parseInt(fs.readFileSync(PID_FILE, 'utf-8').trim(), 10);
+      if (existingPid && existingPid !== process.pid) {
+        try {
+          process.kill(existingPid, 0);
+          console.log(`[WATCHDOG] Another watchdog instance is already running (PID: ${existingPid}). Exiting.`);
+          process.exit(99);
+        } catch (e) {
+          try { fs.unlinkSync(PID_FILE); } catch (err) {}
+        }
+      }
+    } catch (e) {}
+  }
+  try {
+    fs.writeFileSync(PID_FILE, String(process.pid), 'utf-8');
+  } catch (e) {}
+}
+
+function removePidFile() {
+  try {
+    if (fs.existsSync(PID_FILE)) {
+      const existingPid = parseInt(fs.readFileSync(PID_FILE, 'utf-8').trim(), 10);
+      if (existingPid === process.pid) {
+        fs.unlinkSync(PID_FILE);
+      }
+    }
+  } catch (e) {}
+}
 
 function logWatchdog(msg) {
   const time = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jayapura' });
   const line = `[WATCHDOG ${time}] ${msg}`;
   console.log(line);
   try {
+    if (fs.existsSync(LOG_FILE)) {
+      const stat = fs.statSync(LOG_FILE);
+      if (stat.size > 2 * 1024 * 1024) {
+        fs.writeFileSync(LOG_FILE, `[WATCHDOG ${time}] --- Log dirotasi karena melebihi 2MB ---\n`, 'utf-8');
+      }
+    }
     fs.appendFileSync(LOG_FILE, line + '\n', 'utf-8');
   } catch (e) {}
 }
 
+function killZombieBrowsers() {
+  try {
+    if (process.platform === 'win32') {
+      const psScript = `Get-CimInstance Win32_Process | Where-Object { ($_.Name -eq 'brave.exe' -or $_.Name -eq 'chrome.exe') -and $_.CommandLine -like '*wwebjs*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }`;
+      execSync(`powershell -NoProfile -NonInteractive -Command "${psScript}"`, { stdio: 'ignore' });
+    }
+  } catch (e) {}
+}
+
 function clearChromeLocks() {
+  killZombieBrowsers();
   if (!fs.existsSync(AUTH_SESSION_DIR)) return;
   const lockNames = [
-    'lockfile', 'SingletonLock', 'SingletonCookie', 'SingletonSocket',
-    'Default/LOCK', 'Default\\LOCK'
+    'lockfile', 'DevToolsActivePort', 'SingletonLock', 'SingletonCookie', 'SingletonSocket',
+    'Default/LOCK', 'Default\\LOCK', 'Default/DevToolsActivePort', 'Default\\DevToolsActivePort'
   ];
   for (const name of lockNames) {
     const p = path.join(AUTH_SESSION_DIR, name);
@@ -38,15 +86,6 @@ function clearChromeLocks() {
       } catch (e) {}
     }
   }
-}
-
-function killZombieChrome() {
-  try {
-    // Kill dangling headless chrome processes if needed
-    if (process.platform === 'win32') {
-      execSync('taskkill /F /IM chrome.exe /FI "WINDOWTITLE eq about:blank" 2>nul || exit 0', { shell: 'cmd.exe' });
-    }
-  } catch (e) {}
 }
 
 let child = null;
@@ -127,6 +166,9 @@ function checkHealth() {
   }
 }
 
+// Ensure only 1 watchdog instance can ever run
+checkSingleInstance();
+
 // Start bot
 startBot();
 
@@ -137,6 +179,7 @@ setInterval(checkHealth, 30000);
 process.on('SIGINT', () => {
   logWatchdog('Menerima sinyal SIGINT. Menghentikan Watchdog & Bot...');
   isShuttingDown = true;
+  removePidFile();
   if (child) child.kill();
   process.exit(0);
 });
@@ -144,6 +187,11 @@ process.on('SIGINT', () => {
 process.on('SIGTERM', () => {
   logWatchdog('Menerima sinyal SIGTERM. Menghentikan Watchdog & Bot...');
   isShuttingDown = true;
+  removePidFile();
   if (child) child.kill();
   process.exit(0);
+});
+
+process.on('exit', () => {
+  removePidFile();
 });

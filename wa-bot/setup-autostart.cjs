@@ -7,25 +7,16 @@ const startupDir = path.join(appData, 'Microsoft', 'Windows', 'Start Menu', 'Pro
 const vbsPath = path.join(__dirname, 'start-bot-silent.vbs');
 const shortcutTarget = path.join(startupDir, 'RaksaTravel-Bot.vbs');
 
-console.log('==================================================');
-console.log('⚡ RAKSA TRAVEL - AUTOSTART & 24/7 SETUP INSTALLER');
-console.log('==================================================\n');
+// 1. Remove duplicate from Windows Registry if exists (ensures only 1 instance runs)
+try {
+  execSync('powershell -NoProfile -Command "Remove-ItemProperty -Path \'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\' -Name \'RaksaTravelBot\' -ErrorAction SilentlyContinue"', { stdio: 'ignore' });
+} catch (e) {}
 
-// 1. Install to Windows Startup Folder
+// 2. Copy vbs to Startup folder
 try {
   fs.copyFileSync(vbsPath, shortcutTarget);
-  console.log('✅ [1/2] Startup Folder: Berhasil dipasang ke folder Startup Windows.');
+  console.log('✅ Auto-Start Windows Berhasil Dipasang!');
+  console.log('Bot akan otomatis berjalan di background setiap kali laptop Anda dinyalakan (tanpa dobel proses).');
 } catch (err) {
-  console.error('❌ Gagal memasang Startup Folder:', err.message);
+  console.error('Gagal memasang auto-start:', err.message);
 }
-
-// 2. Install to Windows Registry Run Key (Dual-layer guarantee)
-try {
-  const regCmd = `powershell -Command "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'RaksaTravelBot' -Value 'wscript.exe \\"${vbsPath}\\"'"`;
-  execSync(regCmd, { stdio: 'ignore' });
-  console.log('✅ [2/2] Windows Registry: Berhasil didaftarkan ke HKCU Run Key.');
-} catch (err) {
-  console.error('❌ Gagal mendaftarkan registry:', err.message);
-}
-
-console.log('\n🚀 Auto-Start 24 Jam siap! Bot akan otomatis menyala di background setiap kali Windows menyala.');

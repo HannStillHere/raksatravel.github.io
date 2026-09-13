@@ -7,6 +7,8 @@ wa-bot/node_modules/
 wa-bot/config.json
 wa-bot/qr.html
 *.log
+*.pid
+wa-bot/*.pid
 .agents/
 copy website raksa travel 3/
 skills-lock.json

@@ -63,7 +63,7 @@ console.log(`🌐 Browser Engine: ${browserExecutable || 'Default Chromium'}\n`)
 try {
   const authSessionDir = path.join(__dirname, '.wwebjs_auth', 'session');
   if (fs.existsSync(authSessionDir)) {
-    ['lockfile', 'SingletonLock', 'SingletonCookie', 'SingletonSocket', 'Default/LOCK', 'Default\\LOCK'].forEach(f => {
+    ['lockfile', 'DevToolsActivePort', 'SingletonLock', 'SingletonCookie', 'SingletonSocket', 'Default/LOCK', 'Default\\LOCK', 'Default/DevToolsActivePort', 'Default\\DevToolsActivePort'].forEach(f => {
       const p = path.join(authSessionDir, f);
       if (fs.existsSync(p)) {
         try { fs.unlinkSync(p); } catch (e) {}
