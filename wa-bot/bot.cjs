@@ -445,7 +445,7 @@ async function uploadPosterToGitHub(base64ImageData, promoData) {
     addedAt: new Date().toISOString()
   };
 
-  posters = posters.filter(p => p.title !== newPoster.title);
+  posters = posters.filter(p => !(p.title === newPoster.title && p.price === newPoster.price && p.date === newPoster.date));
   posters.unshift(newPoster);
   posters = posters.slice(0, 6);
 
@@ -568,7 +568,7 @@ async function updatePromos(newPromo, imageBase64) {
     }
 
     promos.unshift(newPromo);
-    promos = promos.slice(0, 3);
+    promos = promos.slice(0, 6);
     const jsonStr = JSON.stringify(promos, null, 2);
 
     try {
@@ -625,7 +625,7 @@ async function scanChannelPromos() {
       } catch (e) {}
 
       const mArray = newsletter.msgs ? (newsletter.msgs.getModelsArray ? newsletter.msgs.getModelsArray() : newsletter.msgs.models || []) : [];
-      const recent = mArray.slice(-8);
+      const recent = mArray.slice(-12);
 
       const messages = [];
       for (const m of recent) {

@@ -24,6 +24,18 @@
     "addedAt": "2026-09-13T19:38:19.118Z"
   },
   {
+    "id": "poster-1789328298303",
+    "image": "images/promo-1789328298303.jpeg",
+    "badge": "LION AIR",
+    "badgeType": "airline",
+    "title": "LION AIR Makassar - Jayapura",
+    "desc": "Rp 3.170.000 • Tgl 16 s/d 30 September • Transit • Termasuk Bagasi 10 KG",
+    "price": "3.170.000",
+    "date": "Tgl 16 s/d 30 September",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.170.000%20(Tgl%2016%20s%2Fd%2030%20September)",
+    "addedAt": "2026-09-13T19:38:18.000Z"
+  },
+  {
     "id": "poster-1789328293981",
     "image": "images/promo-1789328293981.jpeg",
     "badge": "LION AIR",
@@ -36,39 +48,27 @@
     "addedAt": "2026-09-13T19:38:13.983Z"
   },
   {
-    "id": "poster-1789065164735",
-    "image": "images/promo-1789065164735.jpeg",
-    "badge": "LION AIR",
-    "badgeType": "airline",
-    "title": "LION AIR Jayapura - Surabaya",
-    "desc": "Rp 3.200.000 • Tgl 15 September • Transit 1X • Termasuk Bagasi 10 KG",
-    "price": "3.200.000",
-    "date": "Tgl 15 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Jayapura%20-%20Surabaya%20Rp%203.200.000%20(Tgl%2015%20September)",
-    "addedAt": "2026-09-10T18:32:44.737Z"
-  },
-  {
-    "id": "poster-1789065162748",
-    "image": "images/promo-1789065162748.jpeg",
+    "id": "poster-1789328292691",
+    "image": "images/promo-1789328292691.jpeg",
     "badge": "SRIWIJAYA AIR",
     "badgeType": "airline",
-    "title": "SRIWIJAYA AIR Makassar - Jayapura",
-    "desc": "Rp 3.475.000 • Tgl 13 s/d 30 September • Transit • Termasuk Bagasi 15 KG",
-    "price": "3.475.000",
-    "date": "Tgl 13 s/d 30 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20SRIWIJAYA%20AIR%20Makassar%20-%20Jayapura%20Rp%203.475.000%20(Tgl%2013%20s%2Fd%2030%20September)",
-    "addedAt": "2026-09-10T18:32:42.749Z"
+    "title": "SRIWIJAYA AIR Jayapura - Makassar",
+    "desc": "Rp 2.395.000 • Tgl 12,13,15,16,17,19,22,24,26,29 September • Penerbangan Langsung • Termasuk Bagasi 15 KG",
+    "price": "2.395.000",
+    "date": "Tgl 12,13,15,16,17,19,22,24,26,29 September",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20SRIWIJAYA%20AIR%20Jayapura%20-%20Makassar%20Rp%202.395.000%20(Tgl%2012%2C13%2C15%2C16%2C17%2C19%2C22%2C24%2C26%2C29%20September)",
+    "addedAt": "2026-09-13T19:38:12.000Z"
   },
   {
-    "id": "poster-1789065155534",
-    "image": "images/promo-1789065155534.jpeg",
-    "badge": "BATIK AIR",
+    "id": "poster-1789328288466",
+    "image": "images/promo-1789328288466.jpeg",
+    "badge": "LION AIR",
     "badgeType": "airline",
-    "title": "BATIK AIR Jayapura - Makassar",
-    "desc": "Rp 2.290.000 • Tgl 8, 10 September • Penerbangan Langsung • Termasuk Bagasi 20 KG",
-    "price": "2.290.000",
-    "date": "Tgl 8, 10 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20BATIK%20AIR%20Jayapura%20-%20Makassar%20Rp%202.290.000%20(Tgl%208%2C%2010%20September)",
-    "addedAt": "2026-09-10T18:32:35.534Z"
+    "title": "LION AIR Makassar - Jayapura",
+    "desc": "Rp 3.305.000 • TGL 15 s/d 30 SEPTEMBER • Penerbangan Langsung • Termasuk Bagasi 10 KG",
+    "price": "3.305.000",
+    "date": "TGL 15 s/d 30 SEPTEMBER",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.305.000%20(TGL%2015%20s%2Fd%2030%20SEPTEMBER)",
+    "addedAt": "2026-09-13T19:38:08.000Z"
   }
 ]
