@@ -534,7 +534,7 @@ function executeGitPush() {
         try { fs.unlinkSync(lockPath); } catch (e) {}
       }
       logSync('🔄 Mengirim pembaruan langsung ke GitHub raksatravel.github.io...');
-      exec('git add promos.json promo-posters.json index.html cek-tiket.html images/ && git commit -m "auto: live promo & poster update from WhatsApp Channel" && git push origin main', { cwd: ROOT_DIR }, (err, stdout) => {
+      exec('git add promos.json promo-posters.json index.html cek-tiket.html images/ && git commit -m "auto: live promo & poster update from WhatsApp Channel" && git push origin HEAD:main', { cwd: ROOT_DIR }, (err, stdout) => {
         if (err) {
           if (!err.message.includes('nothing to commit')) {
             logSync(`ℹ️ Git CLI: ${err.message.substring(0, 120)}`);
