@@ -1,5 +1,41 @@
 [
   {
+    "id": "poster-1789476764614",
+    "image": "images/promo-1789476764614.jpeg",
+    "badge": "BATIK AIR",
+    "badgeType": "airline",
+    "title": "BATIK AIR Jayapura - Makassar",
+    "desc": "Rp 2.290.000 • Tgl 17, 19, 22, 24, 26, 29 September • Penerbangan Langsung • Termasuk Bagasi 20 KG",
+    "price": "2.290.000",
+    "date": "Tgl 17, 19, 22, 24, 26, 29 September",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20BATIK%20AIR%20Jayapura%20-%20Makassar%20Rp%202.290.000%20(Tgl%2017%2C%2019%2C%2022%2C%2024%2C%2026%2C%2029%20September)",
+    "addedAt": "2026-09-15T12:52:44.615Z"
+  },
+  {
+    "id": "poster-1789476763524",
+    "image": "images/promo-1789476763524.jpeg",
+    "badge": "LION AIR",
+    "badgeType": "airline",
+    "title": "LION AIR Makassar - Jayapura",
+    "desc": "Rp 3.170.000 • Tgl 16,17,18,19,21 - 30 SEPTEMBER • Transit • Termasuk Bagasi 10 KG",
+    "price": "3.170.000",
+    "date": "Tgl 16,17,18,19,21 - 30 SEPTEMBER",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.170.000%20(Tgl%2016%2C17%2C18%2C19%2C21%20-%2030%20SEPTEMBER)",
+    "addedAt": "2026-09-15T12:52:43.525Z"
+  },
+  {
+    "id": "poster-1789476761372",
+    "image": "images/promo-1789476761372.jpeg",
+    "badge": "LION AIR",
+    "badgeType": "airline",
+    "title": "LION AIR Jayapura - Surabaya",
+    "desc": "Rp 3.210.000 • Tgl 17 September • Transit 1X • Bagasi 10 KG",
+    "price": "3.210.000",
+    "date": "Tgl 17 September",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Jayapura%20-%20Surabaya%20Rp%203.210.000%20(Tgl%2017%20September)",
+    "addedAt": "2026-09-15T12:52:41.373Z"
+  },
+  {
     "id": "poster-1789476758743",
     "image": "images/promo-1789476758743.jpeg",
     "badge": "LION AIR",
@@ -34,41 +70,5 @@
     "date": "Tgl 15,17,19,22,24,26,29 September",
     "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Jayapura%20-%20Makassar%20Rp%202.220.000%20(Tgl%2015%2C17%2C19%2C22%2C24%2C26%2C29%20September)",
     "addedAt": "2026-09-15T12:52:29.167Z"
-  },
-  {
-    "id": "poster-1789476748355",
-    "image": "images/promo-1789476748355.jpeg",
-    "badge": "SRIWIJAYA AIR",
-    "badgeType": "airline",
-    "title": "SRIWIJAYA AIR Jayapura - Makassar",
-    "desc": "Rp 2.395.000 • Tgl 15, 16, 17, 18, 19, 20, 22, 24, 26, 29 September • Penerbangan Langsung • Termasuk Bagasi 15 KG",
-    "price": "2.395.000",
-    "date": "Tgl 15, 16, 17, 18, 19, 20, 22, 24, 26, 29 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20SRIWIJAYA%20AIR%20Jayapura%20-%20Makassar%20Rp%202.395.000%20(Tgl%2015%2C%2016%2C%2017%2C%2018%2C%2019%2C%2020%2C%2022%2C%2024%2C%2026%2C%2029%20September)",
-    "addedAt": "2026-09-15T12:52:28.356Z"
-  },
-  {
-    "id": "poster-1789476745779",
-    "image": "images/promo-1789476745779.jpeg",
-    "badge": "LION AIR",
-    "badgeType": "airline",
-    "title": "LION AIR Makassar - Jayapura",
-    "desc": "Rp 3.305.000 • Tgl 16 s/d 30 September • Penerbangan Langsung • Termasuk Bagasi 10 KG",
-    "price": "3.305.000",
-    "date": "Tgl 16 s/d 30 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.305.000%20(Tgl%2016%20s%2Fd%2030%20September)",
-    "addedAt": "2026-09-15T12:52:25.780Z"
-  },
-  {
-    "id": "poster-1789476741054",
-    "image": "images/promo-1789476741054.jpeg",
-    "badge": "SRIWIJAYA AIR",
-    "badgeType": "airline",
-    "title": "SRIWIJAYA AIR Jayapura - Makassar",
-    "desc": "Rp 2.395.000 • Tgl 12, 13, 15, 16, 17, 19, 22, 24, 26, 29 September • Penerbangan Langsung • Termasuk Bagasi 15 KG",
-    "price": "2.395.000",
-    "date": "Tgl 12, 13, 15, 16, 17, 19, 22, 24, 26, 29 September",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20SRIWIJAYA%20AIR%20Jayapura%20-%20Makassar%20Rp%202.395.000%20(Tgl%2012%2C%2013%2C%2015%2C%2016%2C%2017%2C%2019%2C%2022%2C%2024%2C%2026%2C%2029%20September)",
-    "addedAt": "2026-09-15T12:52:21.054Z"
   }
 ]
