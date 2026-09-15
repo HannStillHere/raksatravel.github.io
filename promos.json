@@ -1,5 +1,35 @@
 [
   {
+    "id": "promo-1789473763418",
+    "badge": "BATIK AIR",
+    "badgeType": "airline",
+    "airlineLogo": "plane",
+    "origin": "Jayapura",
+    "originCode": "DJJ",
+    "destination": "Makassar",
+    "destinationCode": "UPG",
+    "transit": "Penerbangan Langsung",
+    "price": "2.290.000",
+    "date": "Tgl 12, 15, 17, 19, 22, 24, 26, 29",
+    "baggage": "Termasuk Bagasi 20 KG",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20BATIK%20AIR%20Jayapura%20-%20Makassar%20Rp%202.290.000%20(Tgl%2012%2C%2015%2C%2017%2C%2019%2C%2022%2C%2024%2C%2026%2C%2029)"
+  },
+  {
+    "id": "promo-1789473762356",
+    "badge": "LION AIR",
+    "badgeType": "airline",
+    "airlineLogo": "plane",
+    "origin": "Jayapura",
+    "originCode": "DJJ",
+    "destination": "Makassar",
+    "destinationCode": "UPG",
+    "transit": "Transit",
+    "price": "2.090.000",
+    "date": "Tgl 10 September",
+    "baggage": "Termasuk Bagasi",
+    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Jayapura%20-%20Makassar%20Rp%202.090.000%20(Tgl%2010%20September)"
+  },
+  {
     "id": "promo-1789473295552",
     "badge": "SRIWIJAYA AIR",
     "badgeType": "airline",
@@ -58,35 +88,5 @@
     "date": "Tgl 17 September",
     "baggage": "Bagasi 10 KG",
     "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Jayapura%20-%20Surabaya%20Rp%203.210.000%20(Tgl%2017%20September)"
-  },
-  {
-    "id": "promo-1789473289564",
-    "badge": "LION AIR",
-    "badgeType": "airline",
-    "airlineLogo": "plane",
-    "origin": "Makassar",
-    "originCode": "UPG",
-    "destination": "Jayapura",
-    "destinationCode": "DJJ",
-    "transit": "Transit",
-    "price": "3.170.000",
-    "date": "Tgl 16,17,18,19,21 - 30 September",
-    "baggage": "BAGASI 10 KG",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.170.000%20(Tgl%2016%2C17%2C18%2C19%2C21%20-%2030%20September)"
-  },
-  {
-    "id": "promo-1789473289517",
-    "badge": "LION AIR",
-    "badgeType": "airline",
-    "airlineLogo": "plane",
-    "origin": "Makassar",
-    "originCode": "UPG",
-    "destination": "Jayapura",
-    "destinationCode": "DJJ",
-    "transit": "Penerbangan Langsung",
-    "price": "3.305.000",
-    "date": "Tgl 17 s/d 30 September",
-    "baggage": "Termasuk Bagasi 10 KG",
-    "waText": "Halo%20RaksaTravel%2C%20saya%20mau%20ambil%20tiket%20promo%20LION%20AIR%20Makassar%20-%20Jayapura%20Rp%203.305.000%20(Tgl%2017%20s%2Fd%2030%20September)"
   }
 ]
