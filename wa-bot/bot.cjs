@@ -145,19 +145,23 @@ process.on('unhandledRejection', (reason) => {
 async function analyzeImageWithAiVision(base64Data) {
   if (!base64Data || base64Data.length < 50) return null;
   try {
-    const prompt = `Anda adalah AI parser promo tiket pesawat dan kapal laut untuk Raksa Travel.
-Analisa gambar poster tiket promo ini dan ekstrak data berikut dalam format JSON murni:
+    const prompt = `Anda adalah AI parser promo tiket pesawat dan kapal laut resmi untuk Raksa Travel.
+TUGAS UTAMA: Periksa gambar ini dengan teliti.
+Jika gambar ini BUKAN poster/brosur tiket promo penerbangan pesawat atau tiket kapal laut (misalnya: screenshot game Mobile Legends/game lainnya, foto pribadi, selfie, screenshot chat/DM, meme, makanan, pemandangan tanpa info tiket, bukti transfer, dll), kembalikan HANYA JSON: {"isPromo": false}.
+
+Jika gambar BENAR adalah poster/tiket promo tiket penerbangan atau kapal laut, ekstrak data dalam format JSON murni:
 {
-  "badge": "nama maskapai atau kapal (contoh: SRIWIJAYA AIR / CITILINK / LION AIR / PELNI / GARUDA / BATIK AIR)",
+  "isPromo": true,
+  "badge": "nama maskapai atau kapal (contoh: SRIWIJAYA AIR / CITILINK / LION AIR / PELNI / GARUDA / BATIK AIR / SUPER AIR JET / WINGS AIR)",
   "badgeType": "airline atau ship",
-  "origin": "Kota Asal (contoh: Jayapura / Makassar / Jakarta / Surabaya)",
-  "originCode": "Kode bandara asal 3 huruf (contoh: DJJ / UPG / CGK / SUB)",
-  "destination": "Kota Tujuan (contoh: Makassar / Surabaya / Jakarta / Jayapura)",
-  "destinationCode": "Kode bandara tujuan 3 huruf (contoh: UPG / SUB / CGK / DJJ)",
-  "transit": "Penerbangan Langsung / Transit Makassar / Transit Surabaya / Pelayaran Laut",
-  "price": "Nominal harga saja dengan titik pemisah ribuan (contoh: 1.960.000 / 2.090.000 / 3.490.000)",
-  "date": "Tanggal atau periode keberangkatan yang tertera di poster (contoh: Tgl 1, 3, 5 September / Keberangkatan Terdekat)",
-  "baggage": "Keterangan bagasi jika ada (contoh: Termasuk Bagasi 20 KG / Termasuk Bagasi 10 KG)"
+  "origin": "Kota Asal (contoh: Jayapura / Makassar / Jakarta / Surabaya / Biak / Timika / Sorong / Merauke)",
+  "originCode": "Kode bandara asal 3 huruf (contoh: DJJ / UPG / CGK / SUB / BIK / TIM / SOQ / MKQ)",
+  "destination": "Kota Tujuan (contoh: Makassar / Surabaya / Jakarta / Jayapura / Biak / Timika / Sorong / Merauke)",
+  "destinationCode": "Kode bandara tujuan 3 huruf (contoh: UPG / SUB / CGK / DJJ / BIK / TIM / SOQ / MKQ)",
+  "transit": "Penerbangan Langsung / Transit Makassar / Transit Surabaya / Transit / Pelayaran Laut",
+  "price": "Nominal harga tiket saja dengan titik pemisah ribuan (contoh: 1.960.000 / 2.090.000 / 3.490.000)",
+  "date": "Tanggal atau periode keberangkatan yang tertera di poster (contoh: Tgl 17, 22, 23 September / Keberangkatan Terdekat)",
+  "baggage": "Keterangan bagasi jika ada (contoh: Termasuk Bagasi 20 KG / Bagasi 10 KG / Termasuk Bagasi 15 KG)"
 }
 HANYA KEMBALIKAN JSON VALID TANPA MARKDOWN ATAU PENJELASAN LAIN.`;
 
@@ -207,40 +211,50 @@ HANYA KEMBALIKAN JSON VALID TANPA MARKDOWN ATAU PENJELASAN LAIN.`;
       content = jsonRes.choices?.[0]?.message?.content || "";
     }
 
-function formatRupiahPrice(val) {
-  if (!val) return '1.960.000';
-  const matches = String(val).match(/(?:Rp\.?\s*)?(\d{1,3}(?:[.,]\d{3}){1,2}|\d{6,8})/gi);
-  if (matches && matches.length > 0) {
-    const digits = matches[0].replace(/[^0-9]/g, '');
-    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
-  let str = String(val).replace(/[^0-9]/g, '');
-  if (!str) return '1.960.000';
-  if (str.length > 8) str = str.slice(0, 7);
-  return str.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
+    function formatRupiahPrice(val) {
+      if (!val) return '1.960.000';
+      const matches = String(val).match(/(?:Rp\.?\s*)?(\d{1,3}(?:[.,]\d{3}){1,2}|\d{6,8})/gi);
+      if (matches && matches.length > 0) {
+        const digits = matches[0].replace(/[^0-9]/g, '');
+        return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      }
+      let str = String(val).replace(/[^0-9]/g, '');
+      if (!str) return '1.960.000';
+      if (str.length > 8) str = str.slice(0, 7);
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
 
     content = content.replace(/```json/g, "").replace(/```/g, "").trim();
     const data = JSON.parse(content);
     
-    if (!data.origin || !data.destination || !data.price) return null;
+    if (!data || data.isPromo === false) return null;
+    if (!data.origin || !data.destination || !data.price || !data.badge) return null;
+
+    // Verify it contains recognized travel keywords
+    const validKeywords = ['SRIWIJAYA', 'LION', 'BATIK', 'CITILINK', 'GARUDA', 'PELNI', 'SUPER AIR JET', 'WINGS', 'KAPAL', 'TIKET'];
+    const badgeUpper = String(data.badge).toUpperCase();
+    if (!validKeywords.some(kw => badgeUpper.includes(kw))) {
+      return null;
+    }
 
     const formattedPrice = formatRupiahPrice(data.price);
+    const cleanOrigin = String(data.origin).trim();
+    const cleanDestination = String(data.destination).trim();
 
     return {
       id: `promo-${Date.now()}`,
-      badge: data.badge || "TIKET PROMO",
-      badgeType: data.badgeType || "airline",
+      badge: data.badge.toUpperCase(),
+      badgeType: data.badgeType === 'ship' ? 'ship' : 'airline',
       airlineLogo: data.badgeType === "ship" ? "ship" : "plane",
-      origin: data.origin || "Jayapura",
+      origin: cleanOrigin,
       originCode: data.originCode || "DJJ",
-      destination: data.destination || "Makassar",
+      destination: cleanDestination,
       destinationCode: data.destinationCode || "UPG",
       transit: data.transit || "Penerbangan Langsung",
       price: formattedPrice,
       date: data.date || "Keberangkatan Terdekat",
-      baggage: data.baggage || "Termasuk Bagasi",
-      waText: encodeURIComponent(`Halo RaksaTravel, saya mau ambil tiket promo ${data.badge || ''} ${data.origin || ''} - ${data.destination || ''} Rp ${formattedPrice} (${data.date || ''})`)
+      baggage: data.baggage || (data.badgeType === 'ship' ? 'Termasuk Bagasi Kapal' : 'Termasuk Bagasi 10 KG'),
+      waText: encodeURIComponent(`Halo RaksaTravel, saya mau ambil tiket promo ${data.badge} ${cleanOrigin} - ${cleanDestination} Rp ${formattedPrice} (${data.date || ''})`)
     };
   } catch (err) {
     return null;
@@ -848,58 +862,41 @@ client.on('ready', async () => {
   // Initial Scan
   setTimeout(scanChannelPromos, 3000);
 
+  // Boot Force-Rescan: Clear cache & re-scan after 10 seconds to ensure
+  // all 6 latest promos from channel are detected after restart/boot
+  setTimeout(async () => {
+    logSync('🔄 [BOOT AUTO-RESCAN] Membersihkan cache & memindai ulang 6 promo terbaru dari Saluran WhatsApp...');
+    processedMsgIds.clear();
+    await scanChannelPromos();
+    logSync('✅ [BOOT AUTO-RESCAN SELESAI] 6 promo terbaru sudah disinkronkan ke website.');
+  }, 10000);
+
   // Periodic active scan every 6 seconds
   setInterval(scanChannelPromos, 6000);
 });
 
-// Incoming message listener for direct chats / group messages / forwarded stories
+// Incoming message listener: strictly for WhatsApp Channel (@newsletter) or admin commands
 client.on('message_create', async (msg) => {
   try {
     if (!msg) return;
 
-    if (msg.from && msg.from.includes('@newsletter')) {
+    // Channel/Newsletter notification -> trigger instant scanner
+    if (msg.from && (msg.from.includes('@newsletter') || KNOWN_CHANNEL_IDS.includes(msg.from))) {
       logSync(`📢 [NOTIFIKASI POSTINGAN SALURAN]: dari ${msg.from}. Menjalankan sinkronisasi instan...`);
       setTimeout(scanChannelPromos, 1500);
       return;
     }
 
-    if (msg.hasMedia) {
-      logSync(`📥 [MEDIA DITERIMA]: dari ${msg.from || 'unknown'} (tipe: ${msg.type})...`);
-      try {
-        const media = await msg.downloadMedia();
-        if (media && media.data) {
-          logSync('🤖 Menganalisa gambar poster via Multimodal AI Vision...');
-          let promoData = await analyzeImageWithAiVision(media.data);
-          if (!promoData) {
-            logSync('ℹ️ Mencoba Tesseract OCR Engine...');
-            const buffer = Buffer.from(media.data, 'base64');
-            const { data: { text } } = await Tesseract.recognize(buffer, 'ind+eng');
-            logSync(`📄 Hasil OCR: ${text ? text.substring(0, 80).replace(/\n/g, ' ') : 'kosong'}`);
-            promoData = parsePromoText(text);
-          }
-
-          if (promoData) {
-            logSync(`✅ [PROMO MEDIA DITERIMA]: ${promoData.badge} | ${promoData.origin} -> ${promoData.destination}`);
-            await updatePromos(promoData, media.data);
-          } else {
-            logSync('ℹ️ Media diterima bukan poster promo tiket.');
-          }
-        } else {
-          logSync('⚠️ Media kosong / tidak dapat diunduh');
-        }
-      } catch (e) {
-        logSync(`❌ Error download/analisa media: ${e.message}`);
-      }
+    // Direct manual bot commands (e.g. !sync, !rescan)
+    const bodyText = (msg.body || '').trim().toLowerCase();
+    if (bodyText === '!sync' || bodyText === '!rescan') {
+      logSync(`📩 [PERINTAH DITERIMA]: ${bodyText} dari ${msg.from}. Menjalankan sinkronisasi ulang...`);
+      processedMsgIds.clear();
+      setTimeout(scanChannelPromos, 500);
+      return;
     }
 
-    const bodyText = (msg.body || '').trim();
-    if (bodyText.length > 5 && !msg.hasMedia) {
-      const promoData = parsePromoText(bodyText);
-      if (promoData) {
-        logSync(`📩 [TEKS PROMO DITERIMA]: ${bodyText.substring(0, 60)}...`);
-        await updatePromos(promoData, null);
-      }
-    }
+    // Explicitly ignore general personal/group chats so personal screenshots (games, selfies) are never posted as promos
   } catch (e) {
     logSync(`❌ Error message_create: ${e.message}`);
   }
