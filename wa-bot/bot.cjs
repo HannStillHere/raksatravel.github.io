@@ -24,7 +24,7 @@ process.on('unhandledRejection', (reason) => {
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 7860;
-const GITHUB_REPO = 'raksatravel/raksatravel.github.io';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'HannStillHere/raksatravel.github.io';
 const TARGET_CHANNEL_CODE = '0029VbCYmHQ9WtBxoi1pjH0f';
 let TARGET_CHANNEL_JID = '120363413097453454@newsletter';
 
