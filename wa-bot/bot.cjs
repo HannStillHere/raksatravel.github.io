@@ -782,15 +782,21 @@ async function startWhatsAppBot() {
     for (const msg of messages) {
       try {
         if (!msg.message) continue;
-        const senderJid = msg.key?.remoteJid || '';
+        const remoteJid = msg.key?.remoteJid || '';
+        const participant = msg.key?.participant || '';
+        const sender = `${remoteJid} ${participant}`;
         const isFromMe = msg.key?.fromMe === true;
-        const isOwner = senderJid.includes('6282199157389') || senderJid.includes('082199157389') || senderJid.includes('6283821089552');
 
-        // FILTER: Proses promo dari Saluran Resmi RAKSA TRAVEL ATAU dikirim langsung oleh Owner/Admin!
-        const isFromTargetChannel = (senderJid === TARGET_CHANNEL_JID) || 
-                                   (senderJid.endsWith('@newsletter'));
+        // AUTHORIZED SENDER / OWNER (RAKSA TRAVEL ADMIN: 082153043601)
+        const isOwner = sender.includes('6282153043601') || sender.includes('082153043601') || 
+                        sender.includes('6282199157389') || sender.includes('082199157389') || 
+                        sender.includes('6283821089552') || isFromMe;
 
-        if (isFromTargetChannel || isFromMe || isOwner) {
+        // TARGET: Saluran Resmi WhatsApp RAKSA TRAVEL (0029VbCYmHQ9WtBxoi1pjH0f / @newsletter)
+        const isFromTargetChannel = (remoteJid === TARGET_CHANNEL_JID) || 
+                                   (remoteJid.endsWith('@newsletter'));
+
+        if (isFromTargetChannel || isOwner) {
           await processMessageMedia(msg, isFromTargetChannel ? 'LIVE-CHANNEL' : 'OWNER-DIRECT');
         }
       } catch (err) {
