@@ -339,12 +339,13 @@ async function commitPromosToGitHub(newPromo) {
     const localPath = path.join(__dirname, '..', 'promos.json');
     if (fs.existsSync(localPath)) {
       let localList = JSON.parse(fs.readFileSync(localPath, 'utf-8'));
-      const isDup = localList.some(p => p.origin === newPromo.origin && p.destination === newPromo.destination && p.price === newPromo.price && p.date === newPromo.date);
-      if (!isDup) {
-        localList.unshift(newPromo);
-        localList = localList.slice(0, 12);
-        fs.writeFileSync(localPath, JSON.stringify(localList, null, 2), 'utf-8');
+      const existingIdx = localList.findIndex(p => p.badge === newPromo.badge && p.origin === newPromo.origin && p.destination === newPromo.destination);
+      if (existingIdx !== -1) {
+        localList.splice(existingIdx, 1);
       }
+      localList.unshift(newPromo);
+      localList = localList.slice(0, 12);
+      fs.writeFileSync(localPath, JSON.stringify(localList, null, 2), 'utf-8');
     }
   } catch (e) {}
 
@@ -360,10 +361,16 @@ async function commitPromosToGitHub(newPromo) {
         currentPromos = JSON.parse(decoded);
       }
 
-      const isDuplicate = currentPromos.some(p => p.origin === newPromo.origin && p.destination === newPromo.destination && p.price === newPromo.price && p.date === newPromo.date);
-      if (isDuplicate) {
-        console.log('ℹ️ Promo ini sudah terdaftar di promos.json. Melewati duplikat.');
+      const isExactDuplicate = currentPromos.some(p => p.badge === newPromo.badge && p.origin === newPromo.origin && p.destination === newPromo.destination && p.price === newPromo.price && p.date === newPromo.date);
+      if (isExactDuplicate) {
+        console.log('ℹ️ Promo ini sudah terdaftar persis di promos.json. Melewati duplikat.');
         return true;
+      }
+
+      const existingIdx = currentPromos.findIndex(p => p.badge === newPromo.badge && p.origin === newPromo.origin && p.destination === newPromo.destination);
+      if (existingIdx !== -1) {
+        console.log(`🔄 Menggantikan promo lama (${currentPromos[existingIdx].badge} ${currentPromos[existingIdx].origin}-${currentPromos[existingIdx].destination} Rp ${currentPromos[existingIdx].price}) dengan promo terbaru (Rp ${newPromo.price})...`);
+        currentPromos.splice(existingIdx, 1);
       }
 
       currentPromos.unshift(newPromo);
@@ -449,7 +456,8 @@ async function uploadPosterToGitHub(base64ImageData, promoData, rawBuffer = null
       const descText = promoData.price 
         ? `Rp ${promoData.price} • ${promoData.date} • ${promoData.transit} • ${promoData.baggage}`
         : `${promoData.date} • ${promoData.transit}`;
-      localPosters.unshift({
+      
+      const newPosterObj = {
         id: `poster-${timestamp}`,
         image: fileName,
         badge: promoData.badge || 'TIKET PROMO',
@@ -460,7 +468,16 @@ async function uploadPosterToGitHub(base64ImageData, promoData, rawBuffer = null
         date: promoData.date || '',
         waText: promoData.waText || '',
         addedAt: new Date().toISOString()
-      });
+      };
+
+      const existingPosterIdx = localPosters.findIndex(p => 
+        (p.badge === newPosterObj.badge && p.title.includes(promoData.origin) && p.title.includes(promoData.destination)) ||
+        p.title === newPosterObj.title
+      );
+      if (existingPosterIdx !== -1) {
+        localPosters.splice(existingPosterIdx, 1);
+      }
+      localPosters.unshift(newPosterObj);
       localPosters = localPosters.slice(0, 12);
       fs.writeFileSync(localPostersPath, JSON.stringify(localPosters, null, 2), 'utf-8');
       console.log(`💾 [LOKAL] promo-posters.json diperbarui.`);
@@ -525,10 +542,19 @@ async function uploadPosterToGitHub(base64ImageData, promoData, rawBuffer = null
           addedAt: new Date().toISOString()
         };
 
-        const isDuplicate = posters.some(p => p.title === newPoster.title && p.price === newPoster.price && p.date === newPoster.date);
-        if (isDuplicate) {
+        const isExactDup = posters.some(p => p.title === newPoster.title && p.price === newPoster.price && p.date === newPoster.date);
+        if (isExactDup) {
           console.log('ℹ️ Poster ini sudah ada di promo-posters.json. Melewati upload poster.');
           return true;
+        }
+
+        const existingPosterIdx = posters.findIndex(p => 
+          (p.badge === newPoster.badge && p.title.includes(promoData.origin) && p.title.includes(promoData.destination)) ||
+          p.title === newPoster.title
+        );
+        if (existingPosterIdx !== -1) {
+          console.log(`🔄 Menggantikan poster lama (${posters[existingPosterIdx].title}) dengan poster terbaru...`);
+          posters.splice(existingPosterIdx, 1);
         }
 
         posters.unshift(newPoster);
@@ -757,13 +783,15 @@ async function startWhatsAppBot() {
       try {
         if (!msg.message) continue;
         const senderJid = msg.key?.remoteJid || '';
+        const isFromMe = msg.key?.fromMe === true;
+        const isOwner = senderJid.includes('6282199157389') || senderJid.includes('082199157389') || senderJid.includes('6283821089552');
 
-        // STRICT FILTER: Hanya proses dan push promo dari Saluran Resmi RAKSA TRAVEL!
+        // FILTER: Proses promo dari Saluran Resmi RAKSA TRAVEL ATAU dikirim langsung oleh Owner/Admin!
         const isFromTargetChannel = (senderJid === TARGET_CHANNEL_JID) || 
                                    (senderJid.endsWith('@newsletter'));
 
-        if (isFromTargetChannel) {
-          await processMessageMedia(msg, 'LIVE-CHANNEL');
+        if (isFromTargetChannel || isFromMe || isOwner) {
+          await processMessageMedia(msg, isFromTargetChannel ? 'LIVE-CHANNEL' : 'OWNER-DIRECT');
         }
       } catch (err) {
         console.log('Error processing incoming message:', err.message);
